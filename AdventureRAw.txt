@@ -1,0 +1,235 @@
+﻿using System;
+using System.Globalization; // koden för att ändra text till stor bokstav
+
+
+//Skapades först utan några metoder/konstruktor och classer, råå kodning endast
+
+
+namespace Adventure
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            // 1: Start & namn, hälsning 
+            Console.WriteLine("Welcome to the Shadow Rift Adventure");
+            Console.Write("Enter your name: ");
+            string name = Console.ReadLine() ?? "Unknown";
+            name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name.ToLower());// koden som gör format ändring i namn 
+
+            Console.WriteLine($"\nHello, {name}! Nice to meet you!");
+            Console.ReadKey();
+
+            // 1B: Välj klass & startvärden med int/string variabler
+            /7 skapa en if/else baserat på val
+
+            Console.WriteLine("\nChoose your class:\n");
+            Console.WriteLine(" 1: Warrior = more Dmg - less HP");
+            Console.WriteLine(" 2: Mage    = more HP  - less Dmg\n");
+            Console.Write("Your choice?: ");
+            string choice = Console.ReadLine() ?? "1";
+
+            string playerClass;
+            int maxHp;
+            int hp;
+            int damage;
+            int gold = 0;
+
+            if (choice == "2")
+            {
+                playerClass = "Mage";
+                maxHp = 45;
+                damage = 3;
+            }
+            else
+            {
+                playerClass = "Warrior";
+                maxHp = 30;
+                damage = 6;
+            }
+
+            hp = maxHp;// slipper skirva två ggr nu har båda fullhp direkt, därför sätter vi den utanför if/else
+
+
+            // skapar en status baserat på val, mkt Writeline och interpolation 
+
+            Console.WriteLine();
+            Console.WriteLine("---------- Your Hero ----------");
+            Console.WriteLine($"Name:    {name}");
+            Console.WriteLine($"Class:   {playerClass}");
+            Console.WriteLine($"HP:      {hp}/{maxHp}");
+            Console.WriteLine($"Damage:  {damage}");
+            Console.WriteLine($"Gold:    {gold}");
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("Press any key to continue");
+            Console.ReadKey();
+
+
+
+            // 2: gör en array av en string med fiende namn, skapar en slump kastning sedan
+            // string[] enemies = { "Duskyworms", "Voidclaws", "Ashloms sentinels", "Bloodveil Harbingers" };
+            // Random random = new Random();
+
+            // 3: Huvudmeny
+            // bool fortsätter spelet medans det är sant, använder sedan en while som koppling 
+            // skapar en meny med mkt Writeline och if satser för att förklara outcome baserat på val 1-4
+
+            bool playing = true;
+            while (playing)
+            {
+                Console.WriteLine("\n--- Main Menu ---");
+                Console.WriteLine("1: Adventure");
+                Console.WriteLine("2: Rest");
+                Console.WriteLine("3: Status");
+                Console.WriteLine("4: Exit");
+                Console.Write("Your Choice: ");
+                string menuChoice = Console.ReadLine();
+
+
+
+                // 4: Äventyr 
+                // skapar en if/else för fienden och attributes för de olika fienden i ifsatserna, om meny valet är 1.
+
+                if (menuChoice == "1")
+                {
+                    int enemyIndex = random.Next(enemies.Length);
+                    string enemyName = enemies[enemyIndex];
+
+                    int enemyHp;
+                    int enemyDamage;
+                    int enemyGold;
+
+                    if (enemyName == "Duskyworms")
+                    {
+                        enemyHp = 35;
+                        enemyDamage = 5;
+                        enemyGold = 1;
+                    }
+                    else if (enemyName == "Ashloms sentinels")
+                    {
+                        enemyHp = 45;
+                        enemyDamage = 7;
+                        enemyGold = 3;
+                    }
+                    else if (enemyName == "Voidclaws")
+                    {
+                        enemyHp = 55;
+                        enemyDamage = 9;
+                        enemyGold = 4;
+                    }
+                    else // Bloodveil Harbingers
+                    {
+                        enemyHp = 65;
+                        enemyDamage = 11;
+                        enemyGold = 6;
+                    }
+
+                    Console.WriteLine($"\nYou choose to go on an Adventure...");
+                    Console.WriteLine($"\nA {enemyName} appears! (HP: {enemyHp}, Damage: {enemyDamage}, Gold reward: {enemyGold})");
+
+                    // 5: Strid (battle loop)
+                    // om vi väljer strid  hur mkt skada ska vi göra och koppling till enemies från 4: 
+                    //allt är baserat på val i menyn vi kallar den battlechoice, här lägger vi oxå till heal amount
+
+                    while (hp > 0 && enemyHp > 0)// så länge de lever
+                    {
+                        Console.WriteLine("\n--- Battle Menu ---");
+                        Console.WriteLine("1: Attack");
+                        Console.WriteLine("2: Heal");
+                        Console.WriteLine("3: Run");
+                        Console.Write("Your Choice: ");
+                        string battleChoice = Console.ReadLine() ?? "1";
+
+                        // Spelarens tur
+
+                        if (battleChoice == "1")
+                        {
+                            int playerHit = damage;
+                            enemyHp -= playerHit;
+                            if (enemyHp < 0) enemyHp = 0;
+
+                            Console.WriteLine($"You attacked {enemyName} for {playerHit} damage!");
+                            Console.WriteLine($"{enemyName} now has {enemyHp} HP left");
+
+                            if (enemyHp <= 0) break;
+                        }
+                        else if (battleChoice == "2")
+                        {
+                            int healAmount = 5;
+                            hp += healAmount;
+                            if (hp > maxHp) hp = maxHp;
+                            Console.WriteLine($"You heal yourself for {healAmount} HP. Current HP: {hp}/{maxHp}");
+                        }
+                        else if (battleChoice == "3")
+                        {
+                            Console.WriteLine("You run away from the battle!");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid choice, try again");
+                            continue;
+                        }
+
+                        // Fiendens tur
+
+                        int enemyHit = enemyDamage;
+                        hp -= enemyHit;
+                        if (hp < 0) hp = 0;
+
+                        Console.WriteLine($"{enemyName} strikes back for {enemyHit} damage! Your HP: {hp}/{maxHp}");
+
+                        if (hp <= 0) break;
+                    }
+
+                    // 6: Resultat (vinst/förlust) och rewards med guld, antal guld för olika fienden 
+                    if (enemyHp <= 0)
+                    {
+                        Console.WriteLine($"\nThe {enemyName} is defeated!");
+                        gold += enemyGold;
+                        Console.WriteLine($"{enemyGold} gold! You now have {gold} gold.");
+                        Console.WriteLine($"Status: {name} ({playerClass}) HP: {hp}/{maxHp}, Damage: {damage}, Gold: {gold}");
+                    }
+                    else if (hp <= 0)
+                    {
+                        Console.WriteLine("\nYou were defeated...");
+                        Console.WriteLine("Game Over...");
+                        playing = false;
+                    }
+                    else
+                    {
+                        // run: vad som händer när du flyr som en bitch
+                        Console.WriteLine($"Status: {name} ({playerClass}) HP: {hp}/{maxHp}, Damage: {damage}, Gold: {gold}");
+                    }
+                }
+                else if (menuChoice == "2")
+                {
+                    // 7: rest vad som händer när du vilar och hur mkt heal du får tbks
+
+                    Console.WriteLine("You take a rest...");
+                    int healAmount = 5;
+                    hp += healAmount;
+                    if (hp > maxHp) hp = maxHp;
+
+                    Console.WriteLine($"You recovered {healAmount} HP.");
+                    Console.WriteLine($"Status: {name} ({playerClass}) HP: {hp}/{maxHp}, Damage: {damage}, Gold: {gold}");
+                }
+                else if (menuChoice == "3")
+                {
+                    // 8: Status visar din status 
+
+                    Console.WriteLine($"Status: {name} ({playerClass}) HP: {hp}/{maxHp}, Damage: {damage}, Gold: {gold}");
+                }
+                else if (menuChoice == "4")
+                {
+                    Console.WriteLine("You exit the game: Goodbye");
+                    playing = false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Choice, try again!");
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,155 @@
+﻿
+
+// Detta är alla steg och vägar jag tagit för att skapa detta spel, väg 1 va från början Adventure raw
+// Sedan utvecklades koden pga de olika instanseringar tex: klasser metoder och filer. 
+
+
+                
+                  
+                Det här är min resa och jag hoppas det förenklar för de som vill börja eller skapa ett spel!!!
+
+
+
+
+Steg 1A – Start & namn 
+----------------------
+- Vi vill hälsa spelaren välkommen och få ett namn att använda i spelet
+- Vi läser in ett namn och gör första bokstaven stor.
+  ¤ string name = Console.ReadLine();
+  ¤ ToTitleCase(...): gör t.ex. "alex/Alex".
+- "\n" ger en tom rad. Console.ReadKey() bromsar texten.
+
+
+Steg 1B – Välj klass & startvärden 
+----------------------------------
+
+- Warrior: mer skada (damage), mindre HP.
+- Mage: mer HP, mindre skada.
+¤ Vi gör variabler för hjälten: playerClass, maxHp, hp, damage, gold.
+¤ If/else sätter värden beroende på valet. hp = maxHp läggs efter if/else, så båda klasser börjar på fullt liv.
+
+
+Steg 2 – Fiendelista & tärning (array + Random)
+-----------------------------------------------
+
+- string[] enemies = { "Duskyworms", "Voidclaws", ... };
+- Random random = new Random();  // tärning som ger slump 
+¤ Senare använder vi arrayen + random för att välja en fiende.
+
+
+Steg 3 – Huvudmeny (loop)
+-------------------------
+
+- Spelaren ska kunna välja gång på gång: Adventure, Rest, Status, Exit.
+¤ bool playing = true;
+¤ while (playing) kör menyn tills man väljer Exit
+- Vi läser menyval med Console.ReadLine() och styr med if/else.
+
+
+Steg 4 – Äventyr (skapa fiende med stats
+-----------------------------------------
+
+- När du väljer Adventure ska en fiende dyka upp med HP, Damage och Gold-reward.
+-  (innan metod): if/else sätter enemyHp, enemyDamage, enemyGold beroende på namn.
+- skapar en text för känsla av val
+
+ Console.WriteLine($"\nYou choose to go on an Adventure...");
+ Console.WriteLine($"\nA {enemyName} appears! (HP: {enemyHp}, Damage: {enemyDamage}, Gold reward: {enemyGold})");
+
+
+Steg 5 – Strid (battle loop)
+----------------------------
+- Fighten ska pågå tills någon får 0 HP.
+
+- while (hp > 0 && enemyHp > 0) // kör striden så länge båda lever.
+- Battle-menyn: 1 Attack, 2 Heal, 3 Run.
+- Attack: enemyHp minskar med damage.
+- Heal: +5 HP (men aldrig över maxHp).
+- Run: avbryter striden (break).
+- Fienden slår tillbaka om den lever: hp minskar med enemyDamage.
+- Avslut: om enemyHp ≤ 0 = fienden besegrad; om hp ≤ 0 = du besegrad.
+
+
+Steg 6 – Resultat (vinst eller förlust)
+----------------------------------------
+- Spelaren ska få belöning eller bara dö.
+
+- Vinst: gold += enemyGold och skriv ut hur mycket guld du har nu.
+- död: skriv ”Game Over” och sätt playing = false för att avsluta spelet.
+
+
+Steg 7 – Rest
+--------------------
+- återhämta HP mellan strider.
+- hp += 5; om hp > maxHp sätt hp = maxHp.
+- Skriv ut nuvarande HP så spelaren ser förändringen.
+
+
+Steg 8 – Status (med färg)
+-----------------------------------
+- Vi färgar texten med Console.ForegroundColor och Console.ResetColor.
+- HP röd, Damage grön, Gold gul.
+
+
+Steg 9A – Metod: (ShowStatus)
+--------------------------------
+- Om vi ska slippa skriva samma status om och om igen så skapar vi en metod som hjälper oss.
+- Vi gör en metod som skriver ut statusraden.
+- Vi anropar den från: menyn (Status), efter Vila, efter Strid och vid hjältepresentation.
+- En metod är ett låda med ett namn som vi kan använda flera gånger.
+
+
+Steg 9B – Metod: (CreateEnemy)
+---------------------------------
+- Samla all kod för att skapa en fiende på ett ställe.
+
+- Metoden väljer slumpnamn och sätter enemyHp, enemyDamage, enemyGold.
+- Returnerar flera värden på en gång (en ”tuple”): (name, hp, damage, gold).
+- I Adventure gör vi: var e = CreateEnemy(enemies, random); och plockar ut värdena.
+- Vi vill minska Adventure-blocket, det blir kortare och enklare att läsa.
+
+
+Vilka anrop/metoder samt variabler vi använt
+---------------------------------------------
+- string/int/bool= texter, heltal och sant/falskt.
+- if/else = Om gör si eller gör så om.
+- while = så länge något är sant (meny/strid) fortsätt.
+- array = en lista = fiendenamn.
+- Random: slumpgenerator/tärning.
+- metod: gör koden renare och återanvändbar returnerar.
+
+
+10 A: Två nya klasser 
+-----------------------------
+- Skapa två enkla klasser i nya filer:
+- Player.cs: namn, klass, hp/maxHp, damage, gold.
+- Enemy.cs: namn, hp, damage, goldReward.
+- Sen byter vi ut lösa variabler mot objekt: Player player, Enemy enemy.
+- Det gör koden tydligare.
+
+10B: Enemy-klassen
+--------------------------------
+Nu gör vi samma sak med fienden som vi gjorde med (player).
+
+- Vi skapar en ny fil som heter Enemy.cs.
+Här sparar vi fiendens namn, hp, damage och guld.
+
+- I Program.cs byter vi ut de gamla variablerna enemyHp, enemyDamage, enemyGold.
+Nu skriver vi enemy.Hp, enemy.Damage och enemy.GoldReward istället.
+Namnet hämtar vi med enemy.Name.
+
+Det gör koden enklare att läsa eftersom allt som hör till fienden finns samlat.
+
+Avslutning
+--------------------------------
+
+- Namn och klass för spelaren
+- Meny med Adventure, Rest, Status och Exit
+- Slumpade fiender från en array
+- Strid där man kan Attack, Heal eller Run
+- Belöning eller Game Over
+- Vila för att återfå HP
+- Status med färger
+- Egna metoder (ShowStatus och CreateEnemy)
+- Egna klasser (Player och Enemy)
+
